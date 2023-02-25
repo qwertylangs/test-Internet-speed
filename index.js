@@ -1,8 +1,12 @@
 let isImgLoaded = false;
+let attemps = 10;
 
 function buildTemplate(unit1, unit2, unit3) {
   const container = document.querySelector(".container");
   container.innerHTML = `
+    <label for="customRange3" class="form-label">Quality</label>
+    <input type="range" class="form-range" min="1" max="100" step="1" id="customRange3" value="${attemps}">
+
     <div class="speed-item">
       <p id="bits"><span>Speed In ${unit1}: </span></p>
     </div>
@@ -12,19 +16,20 @@ function buildTemplate(unit1, unit2, unit3) {
     <div class="speed-item">
       <p id="mbs"><span>Speed In ${unit3}: </span></p>
     </div>
+    <div class="buttons">
+      <button type="button" class="btn btn-secondary">Test!</button>
+      <button class="btn btn-bd-primary">${btnText}</button>
+    </div>
   `;
-  const spinner = `<div class="spinner-border" role="status"></div>`;
-  if (!isImgLoaded)
-    container.querySelectorAll("p").forEach((p) => (p.innerHTML += spinner));
 
-  const btn = document.createElement("button");
-  btn.classList.add("btn");
-  // btn.classList.add("btn-primary");
-  btn.classList.add("btn-bd-primary");
-  btn.textContent = btnText;
-  btn.addEventListener("click", convert);
+  const btnConv = container.querySelector(".btn-bd-primary");
+  btnConv.addEventListener("click", convert);
 
-  container.append(btn);
+  const btnTest = container.querySelector(".btn-secondary");
+  btnTest.addEventListener("click", test);
+
+  const input = container.querySelector("input");
+  input.addEventListener("change", (e) => (attemps = e.target.value));
 }
 
 // convert
@@ -64,21 +69,33 @@ function convert() {
 
 // calc speed
 let startTime, endTime;
-let imageSize;
-const image = new Image();
-
+let imageSizes = 0;
 const imageLink = "https://source.unsplash.com/random?topics=nature";
+let counterLoadings = 0;
 
-image.addEventListener("load", async (e) => {
-  isImgLoaded = true;
-  document.querySelectorAll(".spinner-border").forEach((item) => item.remove());
+function loadImages() {
+  for (let i = 1; i <= attemps; i++) {
+    const image = new Image();
+    image.src = imageLink;
+    image.addEventListener("load", loadHandler);
+  }
+}
 
-  endTime = new Date().getTime();
-  console.log(endTime - startTime);
+async function loadHandler(e) {
   const response = await fetch(imageLink);
-  imageSize = response.headers.get("Content-length");
+  imageSizes += +response.headers.get("Content-length");
+
+  console.log(counterLoadings);
+  console.log("loaded");
+  if (++counterLoadings < attemps) return;
+  console.log("All");
+
+  isImgLoaded = true;
+  endTime = new Date().getTime();
+
+  document.querySelectorAll(".spinner-border").forEach((item) => item.remove());
   calcSpeed();
-});
+}
 
 function calcSpeed() {
   const bitOutput = document.getElementById("bits");
@@ -88,12 +105,12 @@ function calcSpeed() {
   const timeDuration = (endTime - startTime) / 1000;
 
   if (units[1] === "Bits") {
-    const loadedBits = imageSize * 8;
+    const loadedBits = imageSizes * 8;
     speeds[1] = (loadedBits / timeDuration).toFixed(3);
     speeds[2] = (speeds[1] / 1000).toFixed(3);
     speeds[3] = (speeds[2] / 1000).toFixed(3);
   } else {
-    speeds[1] = (imageSize / timeDuration).toFixed(3);
+    speeds[1] = (imageSizes / timeDuration).toFixed(3);
     speeds[2] = (speeds[1] / 1024).toFixed(3);
     speeds[3] = (speeds[2] / 1024).toFixed(3);
   }
@@ -103,9 +120,20 @@ function calcSpeed() {
   mboutput.innerHTML += speeds[3];
 }
 
-function init() {
-  startTime = new Date().getTime();
-  image.src = imageLink;
-}
+function test() {
+  btnText = "Convert to bytes";
+  units = {
+    1: "Bits",
+    2: "Kbs",
+    3: "Mbs",
+  };
+  speeds = {};
+  buildTemplate(units[1], units[2], units[3]);
+  const spinner = `<div class="spinner-border" role="status"></div>`;
+  document.querySelectorAll("p").forEach((p) => (p.innerHTML += spinner));
 
-window.onload = init;
+  counterLoadings = 0;
+  isImgLoaded = false;
+  startTime = new Date().getTime();
+  loadImages();
+}

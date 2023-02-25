@@ -10,7 +10,7 @@ body {
 .container {
   width: 350px;
   background-color: #ffffff;
-  padding: 4em 2em;
+  padding: 3em 2em;
   position: absolute;
   transform: translate(-50%, -50%);
   top: 50%;
@@ -58,4 +58,10 @@ span {
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: #5a23c8;
   --bs-btn-active-border-color: #5a23c8;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
