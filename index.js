@@ -145,5 +145,6 @@ function test() {
   first = false;
   isImgLoaded = false;
   startTime = new Date().getTime();
+  imageSizes = 0;
   loadImages();
 }
