@@ -1,0 +1,61 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  height: 100vh;
+  background: linear-gradient(#f4edff, #311b3fd2);
+}
+.container {
+  width: 350px;
+  background-color: #ffffff;
+  padding: 4em 2em;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  border-radius: 0.5em;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.2em;
+  line-height: 2.2em;
+  box-shadow: 0 1.6em 2.4em rgb(40, 4, 67, 0.3);
+}
+p {
+  font-size: 400;
+  color: #747497;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+span {
+  font-weight: 500;
+  color: #090931;
+}
+
+.spinner-border {
+  margin-left: 1em;
+  --bs-spinner-width: 1.2rem;
+  --bs-spinner-height: 1.2rem;
+  --bs-spinner-border-width: 0.2em;
+}
+
+.speed-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.btn-bd-primary {
+  --bs-btn-font-weight: 600;
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #9461fb;
+  --bs-btn-border-color: #9461fb;
+  --bs-btn-border-radius: 0.5rem;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #6528e0;
+  --bs-btn-hover-border-color: #6528e0;
+  --bs-btn-focus-shadow-rgb: 112.520718, 44.062154, 249.437846;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #5a23c8;
+  --bs-btn-active-border-color: #5a23c8;
+}
