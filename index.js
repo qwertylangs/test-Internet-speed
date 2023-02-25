@@ -1,5 +1,6 @@
 let isImgLoaded = false;
 let attemps = 10;
+let first = true;
 
 function buildTemplate(unit1, unit2, unit3) {
   const container = document.querySelector(".container");
@@ -29,7 +30,7 @@ function buildTemplate(unit1, unit2, unit3) {
   btnTest.addEventListener("click", test);
 
   const input = container.querySelector("input");
-  input.addEventListener("change", (e) => (attemps = e.target.value));
+  input.addEventListener("change", changeHandler);
 }
 
 // convert
@@ -91,6 +92,7 @@ async function loadHandler(e) {
   console.log("All");
 
   isImgLoaded = true;
+  first = true;
   endTime = new Date().getTime();
 
   document.querySelectorAll(".spinner-border").forEach((item) => item.remove());
@@ -120,7 +122,14 @@ function calcSpeed() {
   mboutput.innerHTML += speeds[3];
 }
 
+function changeHandler(e) {
+  if (!first) return;
+  attemps = e.target.value;
+}
+
 function test() {
+  if (!first) return;
+
   btnText = "Convert to bytes";
   units = {
     1: "Bits",
@@ -133,6 +142,7 @@ function test() {
   document.querySelectorAll("p").forEach((p) => (p.innerHTML += spinner));
 
   counterLoadings = 0;
+  first = false;
   isImgLoaded = false;
   startTime = new Date().getTime();
   loadImages();
